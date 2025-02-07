@@ -1,6 +1,5 @@
-using Elastic.Apm.NetCoreAll;
 using Elastic.Apm.SerilogEnricher;
-using Elastic.CommonSchema.Serilog;
+using Elastic.Serilog.Enrichers.Web;
 
 using Serilog;
 using Serilog.Debugging;
@@ -26,11 +25,12 @@ builder.Host.UseSerilog((hostingContext, services, loggerConfiguration) =>
 		.Enrich.WithProperty("service.name", hostingContext.Configuration["ElasticApm.ServiceName"]);
 });
 
+builder.Services.AddElasticApmForAspNetCore();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseAllElasticApm(builder.Configuration);
 app.UseSerilogRequestLogging();
 
 app.UseAuthorization();
